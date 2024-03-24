@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html ng-app="EmpLoginApp">
+
+<head>
+    <title>Employee Login</title>
+    <link rel="stylesheet" type="text/css" href="styles/login.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="js/e-login.js"></script>
+</head>
+
+<body ng-controller="EmpLoginController">
+    <div class="login-container">
+        <h2>Employee Login</h2>
+        <form ng-submit="login()">
+            <input type="text" placeholder="Username" ng-model="username" required>
+            <input type="password" placeholder="Password" ng-model="password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html ng-app="adminLoginApp">
+
+<head>
+    <title>Admin Login</title>
+    <link rel="stylesheet" type="text/css" href="styles/login.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="js/a-login.js"></script>
+</head>
+
+<body ng-controller="AdminLoginController">
+    <div class="login-container">
+        <h2>Admin Login</h2>
+        <form ng-submit="login()">
+            <input type="text" placeholder="Username" ng-model="username" required>
+            <input type="password" placeholder="Password" ng-model="password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+
+</html>
