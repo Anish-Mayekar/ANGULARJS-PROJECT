@@ -98,6 +98,19 @@ tr:hover {
     </select>
     <br><br>
 
+    <label for="Roles">Roles:</label>
+    <select id="roles" ng-model="adminCtrl.newtask.rolesName" required>
+      <option value="">Select Role</option>
+      <option value="Frontend Developer">Frontend Developer</option>
+      <option value="Backend Developer">Backend Developer</option>
+      <option value="DevOps Engineer">DevOps Engineer</option>
+      <option value="Software Engineer in Test">Software Engineer in Test</option>
+      <option value="Security Engineer">Security Engineer</option>
+      <option value="Data Engineer">Data Engineer</option>
+    </select>
+    <br><br>
+
+
     <label for="status">Status:</label>
     <select id="status" ng-model="adminCtrl.newtask.statusName" required>
       <option value="">Status</option>
@@ -120,6 +133,7 @@ tr:hover {
     <tr>
       <th>Task Title</th>
       <th>Name of Employee</th>
+      <th>Roles</th>
       <th>Status</th>
       <th>Task Description</th>
       <th>Actions</th>
@@ -127,6 +141,7 @@ tr:hover {
     <tr ng-repeat="task in adminCtrl.tasks | filter:search | uppercase">
       <td>{{ task.TaskTitle }}</td>
       <td>{{ task.employeeName}}</td>
+      <td>{{ task.rolesName}}</td>
       <td>{{ task.statusName }}</td>
       <td>{{ task.TaskDescription }}</td>
       <td>
