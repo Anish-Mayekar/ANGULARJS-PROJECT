@@ -1,85 +1,124 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" ng-app="myApp">
 <head>
-  <title>Task Manager</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="styles/todo.css" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AngularJS Card Display</title>
+  <style>
+    /* CSS for card layout */
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px;
+      width: 100%;
+      background-color: #f9f9f9;
+    }
+    .card h3 {
+      color: #333;
+    }
+    .card p {
+      margin: 5px 0;
+    }
+    /* CSS for employee details */
+    .employee-details {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px;
+      width: 100%;
+      background-color: #f9f9f9;
+    }
+    .employee-details h3 {
+      color: #333;
+    }
+    .employee-details img {
+      border-radius: 50%;
+      width: 150px;
+      height: 150px;
+      margin-bottom: 10px;
+    }
+    .employee-details p {
+      margin: 5px 0;
+    }
+    .social-links {
+      margin-top: 20px;
+    }
+    .social-links a {
+      margin-right: 10px;
+    }
+    /* Adjustments for layout */
+    body, html {
+      height: 100%;
+      margin: 0;
+    }
+    .flex-container {
+      display: flex;
+      height: 100%;
+    }
+    .flex-item {
+      flex: 1;
+      overflow-y: auto; /* Allow scrolling if content exceeds screen height */
+    }
+  </style>
 </head>
-<body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand">Task Manager</a>
-            </div>
-            <div onclick="openModal('add', null)" class="navbar-default">
-                <ul class="nav navbar-nav navbar-right add-task-navbar">
-                    <li><a class="navbar-brand">Add Task</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <div class="container" id="taskListContainer">
-
+<body ng-controller="myCtrl">
+  <h1>Employee Tasks Details:</h1>
+  <div class="flex-container">
+    <div class="flex-item">
+      <div ng-repeat="item in data" class="card">
+        <h3>{{item.title}}</h3>
+        <p><strong>Employee Name:</strong> {{item['emp-name']}}</p>
+        <p><strong>Role:</strong> {{item.role}}</p>
+        <p><strong>Status:</strong> {{item.status}}</p>
+        <p><strong>Description:</strong> {{item.description}}</p>
+      </div>
     </div>
-
-    <div class="modal fade" id="taskModal" role="dialog">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title"></h4>
-                </div>
-                <div class="modal-body" id="item-modal">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <div class="form-group">
-                                    <label class="form-label">Task Title</label>
-                                    <input type="text" onmouseout="validate()" id="tskTitle" class="form-control" placeholder="I want to..." >
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Due Date</label>
-                                    <input type="date" onmouseout="validate()" id="tskDueDate" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="ipStatus">Status</label>
-                                    <select class="form-control" id="tskStatus">
-                                        <option>Todo</option>
-                                        <option>In Progress</option>
-                                        <option>Completed</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="ipPriority">Priority</label>
-                                    <select class="form-control" id="tskPriority">
-                                        <option>High</option>
-                                        <option>Medium</option>
-                                        <option>Low</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="comment">Task Details</label>
-                                    <textarea class="form-control" onmouseout="validate()" rows="5" id="tskContent" placeholder="Describe your task here..."></textarea>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="tskCompletedChk">
-                                    <label class="form-check-label" for="tskCompletedChk">Mark As Completed</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                </div>
-            </div>
+    <div class="flex-item">
+      <div class="employee-details">
+        <h3>Employee Details</h3>
+        <img src="/Bzcs0.png" alt="Employee Image">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <div class="social-links">
+          <a href="#">LinkedIn</a>
+          <a href="#">Twitter</a>
+          <a href="#">Facebook</a>
         </div>
+        <p>Address: 123 Main St, City, Country</p>
+      </div>
     </div>
+  </div>
 
-</div>
-<script src="js/todo.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    angular.module('myApp', [])
+    .controller('myCtrl', function($scope) {
+      // Sample data
+      $scope.data = [
+        {
+          'title': 'Card 1',
+          'emp-name': 'John Doe',
+          'role': 'Developer',
+          'status': 'Active',
+          'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+        },
+        {
+          'title': 'Card 2',
+          'emp-name': 'Jane Smith',
+          'role': 'Designer',
+          'status': 'Inactive',
+          'description': 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+        },
+        {
+          'title': 'Card 2',
+          'emp-name': 'Jane Smith',
+          'role': 'Designer',
+          'status': 'Inactive',
+          'description': 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+        },
+        // Add more data items as needed
+      ];
+    });
+  </script>
 </body>
 </html>
