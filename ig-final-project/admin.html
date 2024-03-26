@@ -1,66 +1,168 @@
-<!DOCTYPE HTML>
-<html ng-app="kanbanapp" ng-controller="maincontroller">
-	<head>
-		<!-- Meta information -->
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!DOCTYPE html>
+<html lang="en" ng-app="adminPage">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 20px;
+}
 
-		<!-- stylesheets -->
-		<link rel="stylesheet" type="text/css" href="styles/reset.css">
-		<link rel="stylesheet" type="text/css" href="styles/style.css">
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans|Baumans' rel='stylesheet' type='text/css'>
+h2 {
+    color: #343a40;
+}
 
-		<!-- scripts -->
-		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
-		<script type="text/javascript" src="js/lib/ngDraggable.js"></script>
-        	<script type="text/javascript" src="js/app.js"></script>
-	</head>
+form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
 
-	<body>
+label {
+    font-weight: bold;
+    color: #495057;
+}
 
+input[type="text"],
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
 
-		<section id="kanban-container">
-			<div class="form-contain">
-				<form ng-submit="pushTask()">
-					<input required type="text" placeholder="Task title" ng-model="newTask.title">
-					<input required type="url" placeholder="Image URL" ng-model="newTask.img">
-					<input required type="text" placeholder="Description" ng-model="newTask.description">
-					<select required ng-model="newTask.stage_id" ng-options="stage.id as stage.name for stage in stages">
-						<option value="">Status</option>
-					</select>
-					<select required ng-model="newTask.type">
-						<option value="">Employee</option>
-						<option ng-repeat="emp in emps" ng-value="emp">{{emp}}</option>
-					</select>
-					<input type="submit" value="Add New">
-				</form>
-			</div>
-			<div class="export-container">
-				<button ng-click="exportTasks()">Export all tasks</button>
-			</div>
-        		<div class="kanban-column concept" ng-repeat="stage in stages" ng-drop="true" ng-drop-success="onDrop($data,$event,stage)" ng-class="{'concept': stage.name == 'Concept', pending: stage.name == 'Pending', develop: stage.name == 'Develop', approved: stage.name == 'Approved', rejected: stage.name == 'Rejected'}">
-	        		<h3>{{stage.name}}</h3>
-	        		<div class="cards-container">
-	        			<div class="card" ng-click="showMore(task)" ng-drag="true" ng-drag-data="task" ng-repeat="task in tasks" ng-if="task.stage_id == stage.id" ng-class="{'Employee1': task.type == 'Employee1', 'Employee2': task.type == 'Employee2', 'Employee3': task.type == 'Employee3', 'Employee4': task.type == 'Employee4', 'expanded': task.showMore==true}" ng-drag-start="dragStart($event, task)" ng-init="task.dragging = false">
-	        				<img ng-src="{{task.img}}" class="cover-img" ng-show="task.showMore==true">
-	        				<h4 class="card-title">{{task.title}}</h4>
-	        				<div class="type">{{task.type}}</div>	        				
-	        				<div class="more-section" ng-if="task.showMore==true">
-	        					<div class="description">
-		        					<p>{{task.description}}</p>
-		        				</div><br><br>
-	        					<select ng-click="$event.stopPropagation()" ng-cancel-drag id="stt" ng-model="task.stage_id" ng-options="stage.id as stage.name for stage in stages">
-	        				</select>
-	        				<br><br>
-	        				<button ng-click="deleteTask(task)">Delete</button>
-	        				</div>
-	        			</div>
-	        		</div>
-	        	</div>
-		</section>
-        <footer>
-        </footer>
-	</body>
-</html>        
-        
+input.ng-invalid {
+    border: 1px solid #dc3545;
+}
 
+button[type="submit"],
+button[type="button"] {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover,
+button[type="button"]:hover {
+    background-color: #0056b3;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+tr:hover {
+    background-color: #f2f2f2;
+}
+
+  </style>
+</head>
+<body>
+
+<div ng-controller="MyadminController as adminCtrl">
+  <h2>Admin Dashboard</h2>
+  <h4>Enter Employee Details:</h4>
+  <form ng-submit="adminCtrl.addEmp()">
+    <label for="TaskTitle">Task Title:</label>
+    <input type="text" id="TaskTitle" ng-model="adminCtrl.newtask.TaskTitle" required><br><br>
+    
+    <label for="employee">Name of Employee:</label>
+    <select id="employee" ng-model="adminCtrl.newtask.employeeName" required>
+      <option value="">Select Employee</option>
+      <option value="Employee 1">Employee 1</option>
+      <option value="Employee 2">Employee 2</option>
+      <option value="Employee 3">Employee 3</option>
+      <option value="Employee 4">Employee 4</option>
+    </select>
+    <br><br>
+
+    <label for="status">Status:</label>
+    <select id="status" ng-model="adminCtrl.newtask.statusName" required>
+      <option value="">Status</option>
+      <option value="Pending">Pending</option>
+      <option value="To-Do">To-Do</option>
+      <option value="Work-in-progress">Work-in-progress</option>
+      <option value="Completed">Completed</option>
+    </select>
+    <br><br>
+
+    <label for="TaskDescription">Task Description:</label>
+    <textarea id="TaskDescription" ng-model="adminCtrl.newtask.TaskDescription" required></textarea><br><br>
+    
+    <button type="submit">Add Task</button>
+  </form>
+  
+  <h2>Task List</h2>
+  <input type="text" placeholder="Search" ng-model="search">
+  <table>
+    <tr>
+      <th>Task Title</th>
+      <th>Name of Employee</th>
+      <th>Status</th>
+      <th>Task Description</th>
+      <th>Actions</th>
+    </tr>
+    <tr ng-repeat="task in adminCtrl.tasks | filter:search | uppercase">
+      <td>{{ task.TaskTitle }}</td>
+      <td>{{ task.employeeName}}</td>
+      <td>{{ task.statusName }}</td>
+      <td>{{ task.TaskDescription }}</td>
+      <td>
+        <button ng-click="adminCtrl.edittask(task)">Edit</button>
+        <button ng-click="adminCtrl.deletetask(task)">Delete</button>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<script>
+  var app = angular.module('adminPage', []);
+  
+  app.controller('MyadminController', function() {
+    var vm = this;
+    
+    vm.tasks = [];
+    
+    vm.newtask = {};
+    
+    vm.addEmp = function() {
+      vm.tasks.push(angular.copy(vm.newtask));
+      vm.newtask = {};
+    };
+    
+    vm.edittask = function(task) {
+      vm.newtask = angular.copy(task);
+      vm.deletetask(task);
+    };
+    
+    vm.deletetask = function(task) {
+      var index = vm.tasks.indexOf(task);
+      vm.tasks.splice(index, 1);
+    };
+  });
+</script>
+
+</body>
+</html>
