@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html ng-app="EmpLoginApp">
+
+<head>
+    <title>Employee Login</title>
+    <link rel="stylesheet" type="text/css" href="styles/login.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="js/e-login.js"></script>
+</head>
+
+<body ng-controller="EmpLoginController">
+    <div class="login-container">
+        <h2>Employee Login</h2>
+            <input type="text" placeholder="user_name" id="user_name" ng-model="username" required>
+            <input type="password" placeholder="password" id="password" ng-model="password" required>
+            <button onclick="login()">Login</button>
+    </div>
+    <script>
+        
+        function login() {
+            const user_name = document.getElementById('user_name').value;
+            const password = document.getElementById('password').value;
+        
+            // Send a POST request to the server with username and password in the request body
+            fetch('/employee_login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_name, password }) // Send username and password in the request body
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = `/employee/${user_name}?user_name=${user_name}`;
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message)
+ // Display success message
+                // Optionally, perform additional actions after successful authentication
+            })
+            .catch(error => {
+                console.log(error) // Display error message
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html ng-app="adminLoginApp">
+
+<head>
+    <title>Admin Login</title>
+    <link rel="stylesheet" type="text/css" href="/styles/">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+
+<body ng-controller="AdminLoginController">
+    <div class="login-container">
+        <h2>Admin Login</h2>
+            <input type="text" id="user_name" name="user_name" placeholder="user_name" required>
+            <input type="password" id="password" name="password"  placeholder="Password"required>           
+            <button onclick="login()">Login</button>
+        
+    </div>
+
+    <script>
+
+        function create (){
+            const user_name = document.getElementById('user_name').value;
+            const password = document.getElementById('password').value;
+            const dev_role= document.getElementById('dev_role').value;
+            const age = document.getElementById('age').value;
+        
+            // Send a POST request to the server with username and password in the request body
+            fetch('/send_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_name, password , dev_role, age}) // Send username and password in the request body
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log(response['name'])
+                    fetch('/admin')
+                }
+                //return response.json();
+            })
+            .then(data => {
+                alert(data.message); // Display success message
+                // Optionally, perform additional actions after successful authentication
+            })
+            .catch(error => {
+                console.log(error) // Display error message
+            });
+        }
+
+
+        function login() {
+            const user_name = document.getElementById('user_name').value;
+            const password = document.getElementById('password').value;
+        
+            // Send a POST request to the server with username and password in the request body
+            fetch('/admin_login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_name, password }) // Send username and password in the request body
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = `/admin/${user_name}?user_name=${user_name}`;
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message)
+ // Display success message
+                // Optionally, perform additional actions after successful authentication
+            })
+            .catch(error => {
+                console.log(error) // Display error message
+            });
+        }
+        
+    </script>
+</body>
+
+</html>

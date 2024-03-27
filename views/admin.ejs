@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="adminPage">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 20px;
+}
+
+h2 {
+    color: #343a40;
+}
+
+form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    font-weight: bold;
+    color: #495057;
+}
+
+input[type="text"],
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+input.ng-invalid {
+    border: 1px solid #dc3545;
+}
+
+button[type="submit"],
+button[type="button"] {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover,
+button[type="button"]:hover {
+    background-color: #0056b3;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+tr:hover {
+    background-color: #f2f2f2;
+}
+
+  </style>
+</head>
+<body>
+
+<div ng-controller="MyadminController as adminCtrl">
+  <h2>Admin Dashboard</h2>
+  <h4>Enter Employee Details:</h4>
+  <form ng-submit="adminCtrl.addEmp()" >
+    <label for="TaskTitle">Task Title:</label>
+    <input type="text" id="task_title" ng-model="adminCtrl.newtask.TaskTitle" required><br><br>
+    
+    <label for="employee">Name of Employee:</label>
+    <select id="emp_name" ng-model="adminCtrl.newtask.employeeName" required>
+      
+      <option value="">Select Employee</option>
+      <% for( var i=0; i< employees.length; i++){%>
+      <option value=<%= employees[i].name %>><%= employees[i].name %></option>
+      <%}%>
+    </select>
+    <br><br>
+
+    <label for="Roles">Roles:</label>
+    <select id="role" ng-model="adminCtrl.newtask.rolesName" required>
+      <option value="">Select Role</option>
+      <option value="Frontend Developer">Frontend Developer</option>
+      <option value="Backend Developer">Backend Developer</option>
+      <option value="DevOps Engineer">DevOps Engineer</option>
+      <option value="Software Engineer in Test">Software Engineer in Test</option>
+      <option value="Security Engineer">Security Engineer</option>
+      <option value="Data Engineer">Data Engineer</option>
+    </select>
+    <br><br>
+
+
+    <label for="status">Status:</label>
+    <select id="status" ng-model="adminCtrl.newtask.statusName" required>
+      <option value="">Status</option>
+      <option value="Pending">Pending</option>
+      <option value="To-Do">To-Do</option>
+      <option value="Work-in-progress">Work-in-progress</option>
+      <option value="Completed">Completed</option>
+    </select>
+    <br><br>
+
+    <label for="TaskDescription">Task Description:</label>
+    <textarea id="task_desp" ng-model="adminCtrl.newtask.TaskDescription" required></textarea><br><br>
+    
+    <button type="submit">Add Task</button>
+  </form>
+  
+  <h2>Task List</h2>
+  <input type="text" placeholder="Search" ng-model="search">
+  <table>
+    <tr>
+      <th>Task Title</th>
+      <th>Name of Employee</th>
+      <th>Roles</th>
+      <th>Status</th>
+      <th>Task Description</th>
+    </tr>
+    <tr ng-repeat="task in adminCtrl.tasks | filter:search | uppercase">
+      <td>{{ task.TaskTitle }}</td>
+      <td>{{ task.employeeName}}</td>
+      <td>{{ task.rolesName}}</td>
+      <td>{{ task.statusName }}</td>
+      <td>{{ task.TaskDescription }}</td>
+      <!-- <td>
+        <button ng-click="adminCtrl.edittask(task)">Edit</button>
+        <button ng-click="adminCtrl.deletetask(task)">Delete</button>
+      </td> -->
+    </tr>
+  </table>
+</div>
+
+<script>
+	var userData = <%- JSON.stringify(userData) %>;
+     
+  var app = angular.module('adminPage', []);
+  
+  app.controller('MyadminController', function() {
+    var vm = this;
+    
+    vm.tasks = [];
+    
+    vm.newtask = {};
+    
+    vm.addEmp = function() {
+      vm.tasks.push(angular.copy(vm.newtask));
+      vm.newtask = {};
+	  const task_title = document.getElementById('task_title').value;
+		const emp_name = document.getElementById('emp_name').value;
+		const role= document.getElementById('role').value;
+		const status = document.getElementById('status').value;
+		const task_desp = document.getElementById('task_desp').value;
+	
+		// Send a POST request to the server with username and password in the request body
+		fetch(`/add_task`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ task_title,emp_name,role,status,task_desp,user_name:userData.username}) // Send username and password in the request body
+		})
+		.then(response => {
+			if (!response.ok) {
+				console.log('Response not ok')
+			}
+			//return response.json();
+		})
+		.then(data => {
+			alert(data.message); // Display success message
+			// Optionally, perform additional actions after successful authentication
+		})
+		.catch(error => {
+			console.log(error) // Display error message
+		});
+    };
+    
+    vm.edittask = function(task) {
+      vm.newtask = angular.copy(task);
+      vm.deletetask(task);
+    };
+    
+    vm.deletetask = function(task) {
+      var index = vm.tasks.indexOf(task);
+      vm.tasks.splice(index, 1);
+    };
+  });
+</script>
+
+
+</body>
+</html>

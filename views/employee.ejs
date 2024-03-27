@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AngularJS Card Display</title>
+  <style>
+    /* CSS for card layout */
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px;
+      width: 100%;
+      background-color: #f9f9f9;
+    }
+    .card h3 {
+      color: #333;
+    }
+    .card p {
+      margin: 5px 0;
+    }
+    /* CSS for employee details */
+    .employee-details {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px;
+      width: 100%;
+      background-color: #f9f9f9;
+    }
+    .employee-details h3 {
+      color: #333;
+    }
+    .employee-details img {
+      border-radius: 50%;
+      width: 150px;
+      height: 150px;
+      margin-bottom: 10px;
+    }
+    .employee-details p {
+      margin: 5px 0;
+    }
+    .social-links {
+      margin-top: 20px;
+    }
+    .social-links a {
+      margin-right: 10px;
+    }
+    /* Adjustments for layout */
+    body, html {
+      height: 100%;
+      margin: 0;
+    }
+    .flex-container {
+        display: flex;
+        height: 100%;
+      }
+      
+      .flex-item {
+        flex: 1;
+        overflow-y: auto;
+      }
+      
+      .flex-container > div {
+        flex: 1;
+      }
+  </style>
+</head>
+<body ng-controller="myCtrl">
+  <h1>Employee Tasks Details:</h1>
+  <div class="flex-container">
+    <div>
+      <% for(var i=0; i< employees.length; i++)  {%>
+      <div >
+        <h3>Title<%= employees[i].title %></h3>
+        <p><strong>Description:<%= employees[i].desp %></p>
+        <p><strong>Status:<%= employees[i].status %></p>
+        <p><strong>Assigned by:<%= employees[i].assigned_by %></p>
+      </div>
+      <button  onclick="task_done(<%= JSON.stringify(employees[i]) %>)">Done</button>
+      <br>
+      <br>
+      <% } %>
+    </div>
+    <div class="flex-item">
+      <div class="employee-details">
+        <h3>Employee Details</h3>
+        <img src="/images/Bzcs0.png" alt="Employee Image">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <div class="social-links">
+          <a href="#">LinkedIn</a>
+          <a href="#">Twitter</a>
+          <a href="#">Facebook</a>
+        </div>
+        <p>Address: 123 Main St, City, Country</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    function task_done(emp_details){
+        const title = emp_details.title;
+        const assigned_by = emp_details.assigned_by;
+        const emp_name = emp_details.emp_name;
+        const role = emp_details.role;
+        const status = emp_details.status;
+        const desp = emp_details.desp;
+        fetch('/task_done', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({ title, assigned_by, emp_name, role, status, desp}) 
+        })
+        .then(data => {
+            alert('Deleted successfully')
+        })
+        .catch(error => {
+            console.log(error) 
+        });
+    }
+
+
+    var userData = <%- JSON.stringify(userData) %>;
+    angular.module('myApp', [])
+    .controller('myCtrl', function($scope) {
+        var vm = this;
+      // Sample data
+      $scope.data = [
+        {
+          'title': 'Card 1',
+          'emp-name': 'John Doe',
+          'role': 'Developer',
+          'status': 'Active',
+          'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+        },
+        {
+          'title': 'Card 2',
+          'emp-name': 'Jane Smith',
+          'role': 'Designer',
+          'status': 'Inactive',
+          'description': 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+        },
+        {
+          'title': 'Card 2',
+          'emp-name': 'Jane Smith',
+          'role': 'Designer',
+          'status': 'Inactive',
+          'description': 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+        },
+        // Add more data items as needed
+      ];
+    });
+  </script>
+</body>
+</html>
